@@ -25,10 +25,10 @@ class Appointment {
   date: Date;
 
   @CreateDateColumn()
-  created_At: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updated_At: Date;
+  updated_at: Date;
 }
 
 export default Appointment;
