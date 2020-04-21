@@ -1,11 +1,13 @@
 import React from 'react';
-import './App.css';
-
+import GlobalStyle from './styles/global'
 const App: React.FC =() =>{
   return (
-    <div className="App">
-     <span>aaa</span>
-    </div>
+		<>
+			<div className="App">
+			<h1>aaa</h1>
+			</div>
+			<GlobalStyle/>
+		</>
   );
 }
 
