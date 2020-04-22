@@ -45,7 +45,7 @@
 					"ts":"never",
 					"tsx":"never"
 				}
-			]
+			],
 			"react/jsx-filename-extension":[
 				1,
 				{
