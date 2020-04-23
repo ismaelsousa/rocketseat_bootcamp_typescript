@@ -24,7 +24,7 @@ const Input:React.FC<InputProps> = ({name, icon:Icon,...props})=>{
 	const handleInputFocus = useCallback(()=>{
 		setIsFocused(true)
 	},[])
-	
+
 	const handleInputBlur = useCallback(()=>{
 		setIsFocused(false)
 		setIsField(!!inputRef.current?.value)
@@ -39,6 +39,7 @@ const Input:React.FC<InputProps> = ({name, icon:Icon,...props})=>{
 				ref={inputRef} 
 				{...props}
 			 />
+			 {error}
 		</Container> 
 	)
 }
