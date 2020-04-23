@@ -19,7 +19,7 @@ export const Container = styled.div`
 		flex:1;
 		border:0;
 		background:transparent;
-		
+		color:#f4ede8;
 		}
 
 		svg{
