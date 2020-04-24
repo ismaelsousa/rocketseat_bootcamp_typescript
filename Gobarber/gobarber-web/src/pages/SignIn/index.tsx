@@ -44,7 +44,16 @@ const SignIn:React.FC = () => {
 				const errors = getValidationErrors(error)
 				formRef.current?.setErrors(errors)
 			}
-			addToast()
+			addToast({
+				title:"Erro ao validar",
+				type:'error',
+				description:'Erro no login'
+			})
+			addToast({
+				title:"Erro ao validar",
+				type:'success',
+				description:'Erro no login'
+			})
 			
 		}
 	},[signIn, addToast])
