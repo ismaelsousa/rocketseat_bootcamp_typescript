@@ -1,35 +1,57 @@
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 import {shade} from 'polished'
 import background from '../../assets/sign-in-background.png'
+
 export const Container = styled.div`
 	height:100vh;
 	display:flex;
 	align-items:stretch;
 	
 `;
+
 export const Content = styled.div`
+	place-content:center;
 	display:flex;
 	flex-direction:column;
-	place-content:center;
 	align-items:center;
+	justify-content:center;
 	width:100%;
 	max-width:700px;
 
+`;
+
+const apperFromLeft = keyframes`
+	from{
+		opacity:0;
+		transform: translateX(-50px);
+	}
+	to{
+		opacity:1;
+		transform: translateX(0px);
+	}
+`;
+
+export const AnimationContainer = styled.div`
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+	justify-content:center;
+	animation:${apperFromLeft} 1s;
 	> a {
 		color:#ff9000;
-			display:block;
-			margin-top:24px;
-			text-decoration:none;
-			transition: color 2s;
-			display:flex;
-			align-items:center;
+		display:block;
+		margin-top:24px;
+		text-decoration:none;
+		transition: color 2s;
+		display:flex;
+		align-items:center;
 
-			svg {
-				margin-right:16px;
-			}
-			&:hover{
-				color: ${shade(0.2, "#ff9000")}
-			}
+		svg {
+			margin-right:16px;
+		}
+		&:hover{
+			color: ${shade(0.2, "#ff9000")}
+		}
 	}
 	form{
 		margin: 80px 0;
@@ -56,6 +78,7 @@ export const Content = styled.div`
 			}
 		}
 	}
+
 `;
 
 export const Background = styled.div`

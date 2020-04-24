@@ -4,7 +4,6 @@ import {FiAlertCircle} from 'react-icons/fi'
 import {Container, Error} from './styles'
 import {useField} from '@unform/core'
 
-import Tooltip from '../Tooltip'
 interface InputProps extends InputHTMLAttributes<HTMLInputElement>{
 	name:string
 	icon:React.ComponentType<IconBaseProps>;
