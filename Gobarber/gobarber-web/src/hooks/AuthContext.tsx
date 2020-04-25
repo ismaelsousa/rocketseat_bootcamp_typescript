@@ -58,6 +58,7 @@ interface authContext{
 function useAuth():authContext{
 	const context = useContext(AuthContext)
 	if(!context){
+		console.log('epa')
 		throw new Error('useAuth must be used within an authprovider')
 	}
 	return context
