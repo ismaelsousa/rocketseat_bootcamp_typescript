@@ -3,20 +3,24 @@ import Logo from '../../assets/logo.svg'
 import { Form} from '@unform/web'
 import { FormHandles} from '@unform/core'
 import * as Yup from 'yup'
-import {Link} from 'react-router-dom'
+import {Link, useHistory} from 'react-router-dom'
 import getValidationErrors from '../../utils/getValidationErrors'
+
+import api from '../../services/api'
+
+
 import {FiArrowLeft,FiMail,FiUser, FiLock} from 'react-icons/fi'
 import {Container, Content, Background, AnimationContainer} from './styles'
 
 import Input from '../../components/Input'
 import Button from '../../components/Button'
-
-
-
+import {useToast} from '../../hooks/ToastContext'
 
 
 
 const SignUp:React.FC = () => {
+	const {addToast} = useToast()
+	const history = useHistory()
 	const formRef = useRef<FormHandles>(null)
 
 	const handleSubmit = useCallback(async (data:object) =>{
@@ -31,13 +35,30 @@ const SignUp:React.FC = () => {
 			await schema.validate(data,{
 				abortEarly:false
 			})
+
+			await api.post('/users',data)
+			addToast({
+				type:'success',
+				title:'Cadastro realizado!'
+			})
+
+			history.push('/')
+
+
 		} catch (error) {
 			
-			const errors = getValidationErrors(error)
-			formRef.current?.setErrors(errors)
-			
+			if(error instanceof Yup.ValidationError){
+				const errors = getValidationErrors(error)
+				formRef.current?.setErrors(errors)
+				return
+			}
+			addToast({
+				title:"Erro ao criar conta",
+				type:'error',
+			})
+		
 		}
-	},[])
+	},[addToast, history])
 	return <Container>
 		<Background/>
 
