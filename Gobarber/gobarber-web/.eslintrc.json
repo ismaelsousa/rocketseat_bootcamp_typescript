@@ -8,7 +8,7 @@
 				"airbnb",
 				"plugin:@typescript-eslint/recommended",
 				"prettier/@typescript-eslint",
-				"plugin:prettier/recommended"
+        "plugin:prettier/recommended"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -23,20 +23,15 @@
         "sourceType": "module"
     },
     "plugins": [
-				"react",
-				"react-hoos",
+        "react",
+        "react-hooks",
 				"@typescript-eslint",
 				"prettier"
-		],
-		"settings": {
-			"import/resolver":{
-				"typescript":{}
-			}
-		},
+    ],
     "rules": {
 			"prettier/prettier":"error",
 			"react-hooks/rules-of-hooks":"error",
-			"react-hooks/exhaustive-deps":"warn",
+			"react/jsx-filename-extension":[1,{"extensions":[".tsx"]}],
 			"import/prefer-default-export":"off",
 			"import/extensions":[
 				"error",
@@ -46,11 +41,11 @@
 					"tsx":"never"
 				}
 			],
-			"react/jsx-filename-extension":[
-				1,
-				{
-					"extensions":[".tsx"]
-				}
-			]
+			"react/jsx-indent": "off"
+		},
+		"settings": {
+			"import/resolver":{
+				"typescript":{}
+			}
 		}
 }
