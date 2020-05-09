@@ -1,58 +1,83 @@
-import React, { createContext, useCallback, useState, useContext } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useState,
+  useContext,
+  useEffect,
+} from 'react';
+import AsyncStorage from '@react-native-community/async-storage';
 import api from '../services/api';
 
 interface AuthState {
-  token: string;;
-  user: object;;
+  token: string;
+  user: object;
 }
 
 interface SignInCredentials {
-  email: string;;
-  password: string;;
+  email: string;
+  password: string;
 }
 interface authContext {
-  user: object;;
-  signIn(credentials: SignInCredentials): Promise<void>;;
-  signOut(): void;;
+  user: object;
+  signIn(credentials: SignInCredentials): Promise<void>;
+  signOut(): void;
 }
 
 const AuthContext = createContext<authContext>({} as authContext);
 
 const AuthProvider: React.FC = ({ children }) => {
-  const [data, setData] = useState<AuthState>(() => {
-    const token = localStorage.getItem('@GoBarber:token');
-    const user = localStorage.getItem('@GoBarber:user');
+  /**
+   * state
+   */
+  const [data, setData] = useState<AuthState>({} as AuthState);
 
-    if (token && user) {
-      return { token, user: JSON.parse(user) };
+  /**
+   * Effects
+   */
+
+  useEffect(() => {
+    async function loadStorage(): Promise<void> {
+      const [token, user] = await AsyncStorage.multiGet([
+        '@GoBarber:token',
+        '@GoBarber:user',
+      ]);
+
+      if (token[1] && user[1]) {
+        setData({ token: token[1], user: JSON.parse(user[1]) });
+      }
     }
+    loadStorage();
+  }, []);
 
-    return {} as AuthState;
-  });
-
+  /**
+   * handlers
+   */
   const signIn = useCallback(async ({ email, password }) => {
     const response = await api.post('sessions', { email, password });
 
     const { token, user } = response.data;
 
-    localStorage.setItem('@GoBarber:token', token);
-    localStorage.setItem('@GoBarber:user', JSON.stringify(user));
+    await AsyncStorage.multiSet([
+      ['@GoBarber:token', token],
+      ['@GoBarber:user', JSON.stringify(user)],
+    ]);
+
     setData({ token, user });
   }, []);
 
-  const signOut = useCallback(() => {
-    localStorage.clear();
+  const signOut = useCallback(async () => {
+    await AsyncStorage.multiRemove(['@GoBarber:token', '@GoBarber:user']);
     setData({} as AuthState);
   }, []);
 
   return (
-  <AuthContext.Provider value={{user:data.user, signIn,signOut}}>
+    <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-function useAuth():  authContext {
+function useAuth(): authContext {
   const context = useContext(AuthContext);
   if (!context) {
     console.log('epa');
