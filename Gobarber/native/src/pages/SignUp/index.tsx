@@ -6,24 +6,63 @@ import {
   KeyboardAvoidingView,
   Platform,
   TextInput,
+  Alert,
 } from 'react-native';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
+import * as Yup from 'yup';
 import logo from '../../assets/logo.png';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { Container, Title, BackToSignIn, BackToSignInText } from './styles';
+import getValidationErrors from '../../utils/getValidationErrors';
+
+interface SignUpFormData {
+  name: string;
+  email: string;
+  password: string;
+}
 
 const SignIn: React.FC = () => {
+  /**
+   * Refs
+   */
   const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null);
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
 
-  const handleSignUp = useCallback((data: object) => {
-    console.log(data);
+  /**
+   * Handlers
+   */
+  const handleSignUp = useCallback(async (data: SignUpFormData) => {
+    try {
+      formRef.current?.setErrors({});
+      const schema = Yup.object().shape({
+        name: Yup.string().required('Nome obrigatório'),
+        email: Yup.string()
+          .required('Email obrigatório')
+          .email('Digite um email válido'),
+        password: Yup.string().required('Senha obrigatória'),
+      });
+
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+      // await signIn({
+      //   email: data.email,
+      //   password: data.password,
+      // });
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(error);
+        formRef.current?.setErrors(errors);
+        return;
+      }
+      Alert.alert('Erro na criação de conta', 'Tente novamente!');
+    }
   }, []);
 
   return (
