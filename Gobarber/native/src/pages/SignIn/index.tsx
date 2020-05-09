@@ -6,6 +6,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  TextInput,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Feather';
@@ -28,17 +29,20 @@ import {
 const SignIn: React.FC = () => {
   const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null);
+  const passwordRef = useRef<TextInput>(null);
+
   const handleSignIn = useCallback((data: object) => {
     console.log(data);
   }, []);
+
   return (
     <>
       <KeyboardAvoidingView
         enabled
-        style={{ flex: 1 }}
+        style={{ flex: 1, minHeight: '100%' }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
+        <ScrollView keyboardShouldPersistTaps="handled">
           <Container>
             <Image source={logo} style={{ marginTop: 20 }} />
             <View>
@@ -46,8 +50,32 @@ const SignIn: React.FC = () => {
             </View>
 
             <Form ref={formRef} onSubmit={handleSignIn}>
-              <Input name="email" icon="mail" placeholder="E-mail" />
-              <Input name="password" icon="lock" placeholder="Senha" />
+              <Input
+                name="email"
+                icon="mail"
+                placeholder="E-mail"
+                autoCorrect={false}
+                autoCapitalize="none"
+                returnKeyType="next"
+                keyboardType="email-address"
+                onSubmitEditing={() => {
+                  passwordRef.current?.focus();
+                }}
+              />
+
+              <Input
+                ref={passwordRef}
+                secureTextEntry
+                textContentType="newPassword"
+                name="password"
+                icon="lock"
+                placeholder="Senha"
+                returnKeyType="send"
+                returnKeyLabel="Entrar"
+                onSubmitEditing={() => {
+                  formRef.current?.submitForm();
+                }}
+              />
 
               <Button onPress={() => formRef.current?.submitForm()}>
                 Entrar
