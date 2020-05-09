@@ -18,6 +18,7 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { Container, Title, BackToSignIn, BackToSignInText } from './styles';
 import getValidationErrors from '../../utils/getValidationErrors';
+import api from '../../services/api';
 
 interface SignUpFormData {
   name: string;
@@ -37,33 +38,39 @@ const SignIn: React.FC = () => {
   /**
    * Handlers
    */
-  const handleSignUp = useCallback(async (data: SignUpFormData) => {
-    try {
-      formRef.current?.setErrors({});
-      const schema = Yup.object().shape({
-        name: Yup.string().required('Nome obrigatório'),
-        email: Yup.string()
-          .required('Email obrigatório')
-          .email('Digite um email válido'),
-        password: Yup.string().required('Senha obrigatória'),
-      });
+  const handleSignUp = useCallback(
+    async (data: SignUpFormData) => {
+      try {
+        formRef.current?.setErrors({});
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Nome obrigatório'),
+          email: Yup.string()
+            .required('Email obrigatório')
+            .email('Digite um email válido'),
+          password: Yup.string().min(6),
+        });
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
-      // await signIn({
-      //   email: data.email,
-      //   password: data.password,
-      // });
-    } catch (error) {
-      if (error instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(error);
-        formRef.current?.setErrors(errors);
-        return;
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+        await api.post('/users', data);
+        Alert.alert(
+          'Cadastro realizado com sucesso!',
+          'Faça login na aplicação',
+        );
+
+        navigation.goBack();
+      } catch (error) {
+        Alert.alert('Erro na criação de conta', 'Tente novamente!');
+
+        if (error instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(error);
+          formRef.current?.setErrors(errors);
+        }
       }
-      Alert.alert('Erro na criação de conta', 'Tente novamente!');
-    }
-  }, []);
+    },
+    [navigation],
+  );
 
   return (
     <>
