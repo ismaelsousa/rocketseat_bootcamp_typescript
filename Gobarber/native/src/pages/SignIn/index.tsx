@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useRef, useCallback } from 'react';
 
 import {
   Image,
@@ -28,6 +28,9 @@ import {
 
 const SignIn: React.FC = () => {
   const navigation = useNavigation();
+  /**
+   * Refs
+   */
   const formRef = useRef<FormHandles>(null);
   const passwordRef = useRef<TextInput>(null);
 
