@@ -5,6 +5,9 @@ import cors from 'cors';
 import uploadConfig from '@config/upload';
 import AppError from '@shared/errors/AppError';
 import routes from './routes';
+
+// Container faz a injeção de dependencias
+import '@shared/container';
 import '@shared/infra/typeorm';
 
 const app = express();
@@ -30,8 +33,7 @@ app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
     message: 'Internal server erros',
   });
 });
-app.listen(3333, () => {
-  console.log(
-    '------------------------------------------------------------------',
-  );
+const port = 3333;
+app.listen(port, () => {
+  console.log(`(((((((((((((((${port})))))))))))))))`);
 });
