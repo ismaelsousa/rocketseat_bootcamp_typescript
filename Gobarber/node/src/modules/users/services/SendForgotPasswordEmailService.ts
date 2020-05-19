@@ -1,6 +1,5 @@
 import 'reflect-metadata';
-// import User from '@modules/users/infra/typeorm/entities/User';
-// import AppError from '@shared/errors/AppError';
+import path from 'path';
 import IUsersRepository from '@modules/users/repositories/IUserRepository';
 import { injectable, inject } from 'tsyringe';
 import IMailProvider from '@shared/providers/MailProvider/models/IMailProvider';
@@ -30,6 +29,13 @@ export default class SendForgotPasswordEmailService {
 
     const { token } = await this.userTokenRepository.generate(user.id);
 
+    const forgotPasswordTemplate = path.resolve(
+      __dirname,
+      '..',
+      'views',
+      'forgot_password.hbs',
+    );
+
     await this.mailProvider.sendMail({
       to: {
         email: user.email,
@@ -37,8 +43,11 @@ export default class SendForgotPasswordEmailService {
       },
       subject: 'Recuperação de senha',
       templateData: {
-        template: `Olá, {{name}}: {{token}}`,
-        variables: { name: user.name, token },
+        file: forgotPasswordTemplate,
+        variables: {
+          name: user.name,
+          link: `http://localhost:3000/reset_password?token=${token}`,
+        },
       },
     });
   }

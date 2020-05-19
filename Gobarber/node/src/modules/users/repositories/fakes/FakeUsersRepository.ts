@@ -7,12 +7,12 @@ class UsersRepository implements IUsersRepository {
   private users: User[] = [];
 
   public async findById(id: string): Promise<User | undefined> {
-    const user = this.users.find(user => user.id === id);
+    const user = this.users.find(findUser => findUser.id === id);
     return user;
   }
 
   public async findByEmail(email: string): Promise<User | undefined> {
-    const user = this.users.find(user => user.email === email);
+    const user = this.users.find(findUser => findUser.email === email);
     return user;
   }
 
