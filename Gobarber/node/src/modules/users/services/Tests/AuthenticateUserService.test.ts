@@ -1,8 +1,8 @@
 import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHashProvider';
 import AppError from '@shared/errors/AppError';
-import AuthenticateUserService from './AuthenticateUserService';
-import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
-import CreateUserService from './CreateUserService';
+import AuthenticateUserService from '@modules/users/services/AuthenticateUserService';
+import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
+import CreateUserService from '@modules/users/services/CreateUserService';
 
 describe('AuthenticateUserService', () => {
   it('should be able to authenticate', async () => {
