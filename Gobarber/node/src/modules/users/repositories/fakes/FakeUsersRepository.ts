@@ -13,6 +13,7 @@ class UsersRepository implements IUsersRepository {
 
   public async findByEmail(email: string): Promise<User | undefined> {
     const user = this.users.find(findUser => findUser.email === email);
+
     return user;
   }
 
