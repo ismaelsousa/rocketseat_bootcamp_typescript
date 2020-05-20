@@ -36,8 +36,6 @@ export default class CreateUserService {
       password: hashedPassword,
     });
 
-    if (user) delete user.password;
-
     return user;
   }
 }

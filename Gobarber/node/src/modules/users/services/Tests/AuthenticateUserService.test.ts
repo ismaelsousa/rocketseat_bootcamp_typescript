@@ -49,7 +49,7 @@ describe('AuthenticateUserService', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
 
-  it('should be able to authenticate with wrong password', async () => {
+  it('should not be able to authenticate with wrong password', async () => {
     const fakeUsersRepository = new FakeUsersRepository();
     const fakeHashProvider = new FakeHashProvider();
 
@@ -64,8 +64,8 @@ describe('AuthenticateUserService', () => {
 
     await createUserService.execute({
       email: 'john@emaple.com',
-      password: '123456',
       name: 'john',
+      password: '123456',
     });
 
     await expect(
