@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import authConfig from '@config/auth';
 import User from '@modules/users/infra/typeorm/entities/User';
