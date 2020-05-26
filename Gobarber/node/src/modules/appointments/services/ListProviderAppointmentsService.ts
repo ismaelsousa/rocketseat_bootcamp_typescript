@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 import { injectable, inject } from 'tsyringe';
 import ICacheProvider from '@shared/providers/CacheProvider/models/ICacheProvider';
+import { classToClass } from 'class-transformer';
 import IAppointmentsRepository from '../repositories/IAppointmentRepository';
 import Appointment from '../infra/typeorm/entities/Appointment';
 
@@ -42,8 +43,7 @@ export default class ListProviderMonthAvailabilityService {
           day,
         },
       );
-      console.log('buscou');
-      await this.cacheProvider.save(keyCache, appointments);
+      await this.cacheProvider.save(keyCache, classToClass(appointments));
     }
 
     return appointments;
