@@ -3,8 +3,8 @@ import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
-import {FiLogIn,FiMail, FiLock} from 'react-icons/fi'
-import getValidationErrors from '../../utils/getValidationErrors'
+import { FiLogIn, FiMail, FiLock } from 'react-icons/fi';
+import getValidationErrors from '../../utils/getValidationErrors';
 import Logo from '../../assets/logo.svg';
 import { Container, Content, Background, AnimationContainer } from './styles';
 import { useAuth } from '../../hooks/AuthContext';
@@ -77,7 +77,7 @@ const SignIn: React.FC = () => {
 							placeholder="senha"
 						/>
 						<Button type="submit">Entrar</Button>
-						<a href="fogot">Esqueci minha senha!</a>
+						<Link to="/forgot-password">Esqueci minha senha!</Link>
 					</Form>
 					<Link to="/signup">
 						<FiLogIn />
@@ -86,8 +86,7 @@ const SignIn: React.FC = () => {
 				</AnimationContainer>
 			</Content>
 			<Background />
-</Container>
-)
+		</Container>
 	);
 };
 
