@@ -6,6 +6,7 @@ import { isToday, format, isAfter, parseISO } from 'date-fns';
 import ptBr from 'date-fns/locale/pt-BR';
 
 import { FiPower, FiClock } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 import {
 	Container,
 	Header,
@@ -136,6 +137,7 @@ const Dashboard: React.FC = () => {
 			return isAfter(parseISO(appointment.date), new Date());
 		});
 	}, [appointments]);
+
 	return (
 		<Container>
 			<Header>
@@ -145,7 +147,9 @@ const Dashboard: React.FC = () => {
 						<img src={user.avatar_url} alt={user.name} />
 						<div>
 							<span>Bem-Vindo,</span>
-							<strong>{user.name}</strong>
+							<Link to="/profile">
+								<strong>{user.name}</strong>
+							</Link>
 						</div>
 					</Profile>
 					<button type="button" onClick={signOut}>
