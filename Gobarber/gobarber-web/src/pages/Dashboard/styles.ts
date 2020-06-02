@@ -3,7 +3,7 @@ import { shade } from 'polished';
 
 export const Container = styled.div``;
 export const Header = styled.header`
-	padding: 32px 0;
+	padding: 32px 10px 32px 10px;
 	background: #28262e;
 `;
 
@@ -65,7 +65,8 @@ export const Content = styled.main`
 	max-width: 1120px;
 	margin: 65px auto;
 	display: flex;
-	padding: 0 10px;
+	/* padding: 0 10px; */
+	padding: 0 32px 0 32px;
 `;
 
 export const Schedule = styled.div`
