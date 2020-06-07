@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, ChangeEvent } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
@@ -16,12 +16,26 @@ import { useToast } from '../../hooks/ToastContext';
 import { useAuth } from '../../hooks/AuthContext';
 
 const Profile: React.FC = () => {
-	const { addToast } = useToast();
+	/**
+	 * Navigations
+	 */
 	const history = useHistory();
+
+	/**
+	 * Context
+	 */
+	const { user, updateUser } = useAuth();
+
+	const { addToast } = useToast();
+
+	/**
+	 * Refs
+	 */
 	const formRef = useRef<FormHandles>(null);
 
-	const { user } = useAuth();
-
+	/**
+	 * Handles
+	 */
 	const handleSubmit = useCallback(
 		async (data: object) => {
 			try {
@@ -59,6 +73,27 @@ const Profile: React.FC = () => {
 		},
 		[addToast, history],
 	);
+
+	const handleAvatarChange = useCallback(
+		async (e: ChangeEvent<HTMLInputElement>) => {
+			if (e.target.files) {
+				const data = new FormData();
+
+				data.append('avatar', e.target.files[0]);
+
+				await api.patch('/users/avatar', data).then((response) => {
+					updateUser(response.data);
+					addToast({
+						type: 'success',
+
+						title: 'Foto atualizada',
+					});
+				});
+			}
+		},
+		[addToast, updateUser],
+	);
+
 	return (
 		<Container>
 			<header>
@@ -76,9 +111,10 @@ const Profile: React.FC = () => {
 				>
 					<AvatarInput>
 						<img src={user.avatar_url} alt={user.name} />
-						<button type="button">
+						<label htmlFor="avatar">
 							<FiCamera />
-						</button>
+							<input type="file" id="avatar" onChange={handleAvatarChange} />
+						</label>
 					</AvatarInput>
 					<h1>Meu perfil</h1>
 
