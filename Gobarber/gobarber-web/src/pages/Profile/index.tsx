@@ -15,6 +15,13 @@ import Button from '../../components/Button';
 import { useToast } from '../../hooks/ToastContext';
 import { useAuth } from '../../hooks/AuthContext';
 
+interface ProfileFormData {
+	name: string;
+	email: string;
+	old_password?: string;
+	password: string;
+	password_confirmation: string;
+}
 const Profile: React.FC = () => {
 	/**
 	 * Navigations
@@ -37,7 +44,7 @@ const Profile: React.FC = () => {
 	 * Handles
 	 */
 	const handleSubmit = useCallback(
-		async (data: object) => {
+		async (data: ProfileFormData) => {
 			try {
 				formRef.current?.setErrors({});
 				const schema = Yup.object().shape({
@@ -45,33 +52,57 @@ const Profile: React.FC = () => {
 					email: Yup.string()
 						.required('Email obrigatório')
 						.email('Digite um email válido'),
-					password: Yup.string().min(6, 'Mínimo 6 dígitos'),
+					old_password: Yup.string(),
+					password: Yup.string().when('old_password', {
+						is: (val) => !!val.length,
+						then: Yup.string().required('Campo obrigatório'),
+						otherwise: Yup.string(),
+					}),
+					password_confirmation: Yup.string().oneOf(
+						[Yup.ref('password'), null],
+						'Senhas não são iguais',
+					),
 				});
 
 				await schema.validate(data, {
 					abortEarly: false,
 				});
 
-				await api.post('/users', data);
+				const { old_password, password, name, email } = data;
+
+				const formData = {
+					name,
+					email,
+					...(old_password
+						? {
+								old_password,
+								password,
+						  }
+						: {}),
+				};
+
+				const response = await api.put('/profile', formData);
+
+				updateUser(response.data);
+
 				addToast({
 					type: 'success',
-					title: 'Cadastro realizado!',
+					title: 'Perfil Atualizado!',
 				});
 
 				history.push('/');
 			} catch (error) {
+				addToast({
+					title: 'Erro na atualização',
+					type: 'error',
+				});
 				if (error instanceof Yup.ValidationError) {
 					const errors = getValidationErrors(error);
 					formRef.current?.setErrors(errors);
-					return;
 				}
-				addToast({
-					title: 'Erro ao criar conta',
-					type: 'error',
-				});
 			}
 		},
-		[addToast, history],
+		[addToast, history, updateUser],
 	);
 
 	const handleAvatarChange = useCallback(
@@ -122,9 +153,9 @@ const Profile: React.FC = () => {
 					<Input type="email" icon={FiMail} name="email" placeholder="email" />
 					<Input
 						containerStyle={{ marginTop: 24 }}
-						type="old+password"
+						type="old_password"
 						icon={FiLock}
-						name="password"
+						name="old_password"
 						placeholder="Senha Atual"
 					/>
 					<Input
@@ -136,7 +167,7 @@ const Profile: React.FC = () => {
 					<Input
 						type="password_confirmation"
 						icon={FiLock}
-						name="password"
+						name="password_confirmation"
 						placeholder="Confirmar senha"
 					/>
 					<Button type="submit">Confirmar mudanças</Button>
